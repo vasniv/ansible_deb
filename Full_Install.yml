@@ -1,0 +1,16 @@
+- name: "This service installing Web Server"
+  hosts: all
+  become: yes
+
+  roles:
+    - role: web_server
+      tags: setup_web
+
+    - role: db_setup
+      tags: sql_setup
+
+    - role: docker_setup
+      tags: docker_setup
+
+    - role: start_docker_container
+      tags: add_container

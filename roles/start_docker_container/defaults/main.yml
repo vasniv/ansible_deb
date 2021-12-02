@@ -1,0 +1,3 @@
+---
+# defaults file for start_docker_container
+docker_image: vasniv/nginx_php_cnt8:02

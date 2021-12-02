@@ -1,0 +1,2 @@
+[Linux_Servers]
+LinuxDeb  ansible_host=your_host ansible_user=user ansible_port=22

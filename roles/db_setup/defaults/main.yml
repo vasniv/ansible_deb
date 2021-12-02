@@ -1,0 +1,6 @@
+---
+# defaults file for db_setup
+mysql_root_password: 123qweasd
+mysql_user_password: 123456
+new_db_name: test_db
+new_user_name: test1

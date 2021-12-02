@@ -1,0 +1,24 @@
+---
+- name: Install Docker Module for Python
+  pip:
+    name: docker
+
+- name: Pull image from DockerHub
+  docker_image:
+    name: '{{ docker_image }}'
+
+- name: Add_container1
+  docker_container:
+    name: nginx1
+    state: started
+    image: '{{ docker_image }}'
+    ports: 8080:80
+    auto_remove: yes
+
+- name: Add_container2
+  docker_container:
+    name: nginx2
+    state: started
+    image: '{{ docker_image }}'
+    ports: 8081:80
+    auto_remove: yes

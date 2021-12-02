@@ -1,0 +1,67 @@
+---
+# tasks file for db_setup
+- name: Install MySQL Server
+  apt:
+    pkg:
+     - mariadb-server
+    state: latest
+    update_cache: yes
+    cache_valid_time: 86400
+
+- name: Start Service MySQL
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: Check MySQL Server Status
+  service:
+    name: mysql
+
+- name: Download Config MySql
+  copy:
+    src: 50-server.cnf
+    dest: /etc/mysql/mariadb.conf.d
+  notify:
+     - Restart MySql
+
+- name: Set MySQL root password
+  mysql_user:
+    login_host:
+    login_user: root
+    login_password:
+    name: root
+    password: '{{ mysql_root_password }}'
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+  ignore_errors: yes
+
+- name: Create a new database
+  mysql_db:
+    login_user: root
+    login_password: '{{ mysql_root_password }}'
+    name: '{{ new_db_name }}'
+    state: present
+
+- name: Create MySQL user
+  mysql_user:
+    login_user: root
+    login_password: '{{ mysql_root_password }}'
+    name: '{{ new_user_name }}'
+    password: '{{ mysql_user_password }}'
+    host: '%'
+    priv: '*.*:ALL'
+    state: present
+
+- name: Add sample data to DB
+  copy:
+    src: data.sql
+    dest: /tmp/dump.sql
+
+- name: Insert data in DB
+  mysql_db:
+    login_user: root
+    login_password: '{{mysql_root_password}}'
+    name: '{{ new_db_name }}'
+    state: import
+    target: /tmp/dump.sql
